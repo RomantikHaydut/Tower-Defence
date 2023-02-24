@@ -4,31 +4,42 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 2f;
-    private Transform _player;
+    [SerializeField] private int damage = 5;
 
+    [SerializeField] private float moveSpeed = 2f;
+
+    private Transform player;
     private void Start()
     {
-        _player = FindObjectOfType<Player>().transform;
-        Spawn();
+        LookThePlayer();
     }
-
     private void Update()
     {
         Movement();
     }
     private void Movement()
     {
-        if (_player != null)
+        if (player != null)
         {
             transform.position += transform.forward * Time.deltaTime * moveSpeed;
-        }  
+        }
     }
 
-    private void Spawn()
+    public void LookThePlayer()
     {
-        Vector3 direction = (_player.transform.position - transform.position).normalized;
+        player = FindObjectOfType<Player>().transform;
+        Vector3 direction = (player.position - transform.position).normalized;
         direction.y = 0;
         transform.forward = direction;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out Tower tower))
+        {
+            tower.GetDamage(damage);
+            Destroy(gameObject);
+
+        }
     }
 }

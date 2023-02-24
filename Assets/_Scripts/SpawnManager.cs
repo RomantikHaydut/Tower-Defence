@@ -35,6 +35,7 @@ public class SpawnManager : MonoBehaviour
     private void SpawnManager_OnEnemySpawned(object sender, EventArgs e)
     {
         LocateEnemy();
+        RotateEnemy();
     }
 
     private void Spawn()
@@ -51,6 +52,15 @@ public class SpawnManager : MonoBehaviour
         randomSpawnPos.y = spawnPosY;
         lastSpawnedEnemy.transform.position = randomSpawnPos;
 
+    }
+
+    private void RotateEnemy()
+    {
+        lastSpawnedEnemy.TryGetComponent<Enemy>(out Enemy enemy);
+        if (enemy != null)
+        {
+            enemy.LookThePlayer();
+        }
     }
 
 }

@@ -10,12 +10,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float rotateSpeed = 1f;
 
-    [SerializeField] private LayerMask enemyLayerMask;
-
     private void Update()
     {
-        if (IsThereAnyEnemy())
+        if (IsThereAnyEnemy(out GameObject[] enemies))
         {
+            FindNearestTargetInRange(enemies);
             Rotate();
         }
     }
@@ -31,12 +30,11 @@ public class Player : MonoBehaviour
         }
 
     }
-    private bool IsThereAnyEnemy()
+    private bool IsThereAnyEnemy(out GameObject[] enemies)
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
         if (enemies.Length > 0)
         {
-            FindTargetInRange(enemies);
             return true;
         }
 
@@ -44,7 +42,7 @@ public class Player : MonoBehaviour
     }
 
 
-    private void FindTargetInRange(GameObject[] enemies)
+    private void FindNearestTargetInRange(GameObject[] enemies)
     {
         float maxDistance = range;
 
@@ -52,7 +50,7 @@ public class Player : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             float distance = Vector3.Distance(enemy.transform.position, new Vector3(transform.position.x, enemy.transform.position.y, transform.position.z));
-            print(distance);
+            
             if (distance < maxDistance)
             {
                 maxDistance = distance;
